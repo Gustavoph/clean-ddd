@@ -1,0 +1,12 @@
+{
+  "name": "clean-ddd",
+  "version": "1.0.0",
+  "description": "- Domain Experts\r   - Conversa\r - Linguagem ubíqua\r   - Usuário\r     - Cliente\r     - Fornecedor\r     - Atendente\r     - Barman",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
