@@ -4,10 +4,9 @@
     "plugin:vitest-globals/recommended"
   ],
   "rules": {
-    "camelcase": "off",
     "no-useless-constructor": "off"
   },
-  "env": { 
+  "env": {
     "vitest-globals/env": true
   }
 }

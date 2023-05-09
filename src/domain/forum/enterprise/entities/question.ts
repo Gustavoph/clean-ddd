@@ -9,7 +9,7 @@ type QuestionProps = {
   content: string
   authorId: UniqueEntityId
   slug: Slug
-  bestAnswerId: UniqueEntityId
+  bestAnswerId?: UniqueEntityId
   createdAt: Date
   updatedAt?: Date
 }
@@ -67,7 +67,7 @@ export class Question extends Entity<QuestionProps> {
     this.touch()
   }
 
-  set bestAnswerId(bestAnswerId: UniqueEntityId) {
+  set bestAnswerId(bestAnswerId: UniqueEntityId | undefined) {
     this.props.bestAnswerId = bestAnswerId
     this.touch()
   }
