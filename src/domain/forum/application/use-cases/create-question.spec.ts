@@ -1,17 +1,18 @@
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
 
-import { Question } from '@/domain/forum/enterprise/entities/question'
-import { QuestionsRepository } from '../repositories/questions-repository'
 import { CreateQuestionUseCase } from './create-question'
+import { InMemoryQuestionsRepository } from 'test/repositories/in-memory-questions-repository'
 
-const fakeQuestionsRepository: QuestionsRepository = {
-  async create(question: Question): Promise<void> {},
-}
+let inMemoryQuestionsRepository: InMemoryQuestionsRepository
+let sut: CreateQuestionUseCase
 
 describe('Create Question Use Case', async () => {
-  it('should create a question', async () => {
-    const sut = new CreateQuestionUseCase(fakeQuestionsRepository)
+  beforeEach(() => {
+    inMemoryQuestionsRepository = new InMemoryQuestionsRepository()
+    sut = new CreateQuestionUseCase(inMemoryQuestionsRepository)
+  })
 
+  it('should create a question', async () => {
     const { question } = await sut.execute({
       authorId: 'fake-author-id',
       content: 'fake-content',
