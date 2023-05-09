@@ -34,9 +34,9 @@
       "@/*": ["./src/*"],
       "@core/*": ["./src/core/*"],
       "@domain/*": ["./src/domain/*"],
-      "@entities/*": ["./src/domain/entities/*"],
-      "@use-cases/*": ["./src/domain/use-cases/*"],
-      "@repositories/*": ["./src/domain/repositories/*"],
+      "@entities/*": ["src/domain/forum/enterprise/entities/*"],
+      "@use-cases/*": ["src/domain/forum/application/use-cases/*"],
+      "@repositories/*": ["src/domain/forum/application/repositories/*"],
     },
     // "typeRoots": [],                                  /* Specify multiple folders that act like './node_modules/@types'. */
     // "types": [],                                      /* Specify type package names to be included without being referenced in a source file. */
