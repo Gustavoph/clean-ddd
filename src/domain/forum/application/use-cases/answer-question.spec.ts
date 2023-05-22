@@ -13,12 +13,13 @@ describe('Answer Question Use Case', async () => {
   })
 
   it('should create an answer', async () => {
-    const { answer } = await sut.execute({
+    const result = await sut.execute({
       questionId: 'fake-question-id',
       instructorId: 'fake-instructor-id',
       content: 'fake-content',
     })
 
-    expect(answer.content).toBe('fake-content')
+    expect(result.isRight()).toBe(true)
+    expect(inMemoryAnswersRepository.answers[0]).toEqual(result.value?.answer)
   })
 })
