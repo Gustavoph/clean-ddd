@@ -1,30 +1,32 @@
-import { AnswersRepository } from '@/domain/forum/application/repositories/answers-repository'
-import { Question } from '../../enterprise/entities/question'
-import { QuestionsRepository } from '../repositories/questions-repository'
-import { Either, left, right } from '@/core/errors/either'
-import { ResourceNotFoundError } from './errors/resource-not-found-error'
-import { NotAllowedError } from './errors/not-allowed-error'
+import { AnswersRepository } from '../repositories/answers-repository'
+import { Question } from '@/domain/forum/enterprise/entities/question'
+import { QuestionsRepository } from '@/domain/forum/application/repositories/questions-repository'
+import { Either, left, right } from '@/core/either'
+import { ResourceNotFoundError } from '@/core/errors/errors/resource-not-found-error'
+import { NotAllowedError } from '@/core/errors/errors/not-allowed-error'
 
-interface ChoseQuestionBestAnswerUseCaseRequest {
-  answerId: string
+interface ChooseQuestionBestAnswerUseCaseRequest {
   authorId: string
+  answerId: string
 }
 
-type ChoseQuestionBestAnswerUseCaseResponse = Either<
-  ResourceNotFoundError,
-  { question: Question }
+type ChooseQuestionBestAnswerUseCaseResponse = Either<
+  ResourceNotFoundError | NotAllowedError,
+  {
+    question: Question
+  }
 >
 
-export class ChoseQuestionBestAnswerUseCase {
+export class ChooseQuestionBestAnswerUseCase {
   constructor(
-    private readonly answersRepository: AnswersRepository,
-    private readonly questionsRepository: QuestionsRepository,
+    private questionsRepository: QuestionsRepository,
+    private answersRepository: AnswersRepository,
   ) {}
 
   async execute({
     answerId,
     authorId,
-  }: ChoseQuestionBestAnswerUseCaseRequest): Promise<ChoseQuestionBestAnswerUseCaseResponse> {
+  }: ChooseQuestionBestAnswerUseCaseRequest): Promise<ChooseQuestionBestAnswerUseCaseResponse> {
     const answer = await this.answersRepository.findById(answerId)
 
     if (!answer) {
@@ -47,6 +49,8 @@ export class ChoseQuestionBestAnswerUseCase {
 
     await this.questionsRepository.save(question)
 
-    return right({ question })
+    return right({
+      question,
+    })
   }
 }

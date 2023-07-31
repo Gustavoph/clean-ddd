@@ -1,22 +1,19 @@
-import { Optional } from '@core/types/optional'
-import { Entity } from '@core/entities/entity'
-import { UniqueEntityId } from '@core/entities/unique-entity-id'
-import { AnswerAttachmentList } from './answer-attachment-list'
+import { AggregateRoot } from '@/core/entities/aggregate-root'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { Optional } from '@/core/types/optional'
+import { AnswerAttachmentList } from '@/domain/forum/enterprise/entities/answer-attachment-list'
+import { AnswerCreatedEvent } from '@/domain/forum/enterprise/events/answer-created-event'
 
-export type AnswerProps = {
+export interface AnswerProps {
+  authorId: UniqueEntityID
+  questionId: UniqueEntityID
   content: string
-  authorId: UniqueEntityId
-  questionId: UniqueEntityId
   attachments: AnswerAttachmentList
   createdAt: Date
   updatedAt?: Date
 }
 
-export class Answer extends Entity<AnswerProps> {
-  get content() {
-    return this.props.content
-  }
-
+export class Answer extends AggregateRoot<AnswerProps> {
   get authorId() {
     return this.props.authorId
   }
@@ -25,16 +22,20 @@ export class Answer extends Entity<AnswerProps> {
     return this.props.questionId
   }
 
+  get content() {
+    return this.props.content
+  }
+
+  get attachments() {
+    return this.props.attachments
+  }
+
   get createdAt() {
     return this.props.createdAt
   }
 
   get updatedAt() {
     return this.props.updatedAt
-  }
-
-  get attachments() {
-    return this.props.attachments
   }
 
   get excerpt() {
@@ -57,7 +58,7 @@ export class Answer extends Entity<AnswerProps> {
 
   static create(
     props: Optional<AnswerProps, 'createdAt' | 'attachments'>,
-    id?: UniqueEntityId,
+    id?: UniqueEntityID,
   ) {
     const answer = new Answer(
       {
@@ -67,6 +68,12 @@ export class Answer extends Entity<AnswerProps> {
       },
       id,
     )
+
+    const isNewAnswer = !id
+
+    if (isNewAnswer) {
+      answer.addDomainEvent(new AnswerCreatedEvent(answer))
+    }
 
     return answer
   }

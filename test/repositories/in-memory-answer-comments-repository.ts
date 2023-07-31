@@ -2,32 +2,13 @@ import { PaginationParams } from '@/core/repositories/pagination-params'
 import { AnswerCommentsRepository } from '@/domain/forum/application/repositories/answer-comments-repository'
 import { AnswerComment } from '@/domain/forum/enterprise/entities/answer-comment'
 
-export class InMemoryAnswerCommentRepository
+export class InMemoryAnswerCommentsRepository
   implements AnswerCommentsRepository
 {
-  public answerComments: AnswerComment[] = []
+  public items: AnswerComment[] = []
 
-  async create(answerComment: AnswerComment): Promise<void> {
-    this.answerComments.push(answerComment)
-  }
-
-  async findManyByAnswerId(
-    questionId: string,
-    { page }: PaginationParams,
-  ): Promise<AnswerComment[]> {
-    const answerComments = this.answerComments
-      .filter(
-        (questionComment) => questionComment.answerId.toString() === questionId,
-      )
-      .slice((page - 1) * 20, page * 20)
-
-    return answerComments
-  }
-
-  async findById(id: string): Promise<AnswerComment | null> {
-    const answerComment = this.answerComments.find(
-      (answerComment) => answerComment.id.toString() === id,
-    )
+  async findById(id: string) {
+    const answerComment = this.items.find((item) => item.id.toString() === id)
 
     if (!answerComment) {
       return null
@@ -36,11 +17,23 @@ export class InMemoryAnswerCommentRepository
     return answerComment
   }
 
-  async delete(answerComment: AnswerComment): Promise<void> {
-    const itemIndex = this.answerComments.findIndex(
+  async findManyByAnswerId(answerId: string, { page }: PaginationParams) {
+    const answerComments = this.items
+      .filter((item) => item.answerId.toString() === answerId)
+      .slice((page - 1) * 20, page * 20)
+
+    return answerComments
+  }
+
+  async create(answerComment: AnswerComment) {
+    this.items.push(answerComment)
+  }
+
+  async delete(answerComment: AnswerComment) {
+    const itemIndex = this.items.findIndex(
       (item) => item.id === answerComment.id,
     )
 
-    this.answerComments.splice(itemIndex, 1)
+    this.items.splice(itemIndex, 1)
   }
 }
